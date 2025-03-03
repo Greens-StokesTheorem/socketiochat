@@ -17,6 +17,7 @@ app.get('/', (req, res) => {
 let position = {x: 0.5, y: 0.5};
 if (fs.existsSync("data.json")) {
     position = JSON.parse(fs.readFileSync("data.json", "utf8"));
+    console.log("readfile")
 }
 
 
@@ -33,7 +34,7 @@ io.on('connection', (socket) => {
 
         position = newPosition;
         fs.writeFileSync("data.json", JSON.stringify(position));
-        socket.emit("update position", position)
+        io.emit("update position", position)
 
     })
 
