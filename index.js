@@ -6,6 +6,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 const port = 8080;
 const fs = require("fs");
+const { Socket } = require('dgram');
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
@@ -13,6 +14,10 @@ app.get('/', (req, res) => {
 
 
 
+let position = {x: 0.5, y: 0.5};
+if (fs.existsSync("data.json")) {
+    position = JSON.parse(fs.readFileSync("data.json", "utf8"));
+}
 
 
 
@@ -21,25 +26,27 @@ io.on('connection', (socket) => {
 
     console.log("connected")
 
-    socket.on("pointer move", (position) => {
+    io.emit("update position", position);
 
-        const pointerposition = position;
 
-        io.emit("pointer move", pointerposition);
+    socket.on("drag", (newPosition) => {
+
+        position = newPosition;
+        fs.writeFileSync("data.json", JSON.stringify(position));
+        socket.emit("update position", position)
 
     })
 
+    // socket.on('send name', (username) => {
+    //     io.emit('send name', (username));
+    //     console.log(username);
 
-    socket.on('send name', (username) => {
-        io.emit('send name', (username));
-        console.log(username);
+    // });
 
-    });
-
-    socket.on('send message', (chat) => {
-        io.emit('send message', (chat));
-        console.log(chat);
-    });
+    // socket.on('send message', (chat) => {
+    //     io.emit('send message', (chat));
+    //     console.log(chat);
+    // });
 
     socket.on('disconnect', () => {
         console.log('user disconnected');

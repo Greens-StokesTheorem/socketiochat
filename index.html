@@ -60,21 +60,35 @@
     const deviceheight = window.innerHeight;
     const devicewidth = window.innerWidth;
 
+    let circle = document.createElement("div");
+    circle.id = "circle";
+    circle.style.height = "1rem";
+    circle.style.aspectRatio = "1";
+    circle.style.borderRadius = "50%";
+    circle.style.backgroundColor = "rgb(10, 10, 10)";
+    circle.style.position = "absolute";
+    messageArea.appendChild(circle);
+    circle.style.transform = "translate(-50%, -50%)"
+    circle.style.pointerEvents = "none";
 
-    document.addEventListener("pointermove", (event) => {
 
-        let pointerposition = [event.clientX / devicewidth, event.clientY / deviceheight];
-        // console.log(`${event.clientX} and ${event.clientY}`)
+    socket.on("update position", (position) => {
 
-        //  Sends event to server
-        socket.emit("pointer move", pointerposition);
-
-        //  Responds to server emitts
-    
+        document.getElementById("circle").style.top = `${position.y * 100}%`;
+        document.getElementById("circle").style.left = `${position.x * 100}%`;
 
     })
 
+    document.addEventListener("pointermove", (e) => {
 
+        const newX = e.clientX / devicewidth;
+        const newY = e.clientY / deviceheight;
+        document.getElementById("circle").style.top = `${newY * 100}%`;
+        document.getElementById("circle").style.left = `${newX * 100}%`;
+
+        socket.emit("drag", {newX, newY});
+
+    })
 
     socket.on("pointer move", (pointerposition) => {
 
@@ -83,8 +97,7 @@
         if (document.getElementById("pointerposition")) {
             const box = document.getElementById("pointerposition");
             box.innerHTML = `${pointerposition[0]} and ${pointerposition[1]}`;
-            document.getElementById("circle").style.top = `${pointerposition[1] * 100}%`;
-            document.getElementById("circle").style.left = `${pointerposition[0] * 100}%`;
+
 
         } else {
 
@@ -97,19 +110,6 @@
             position.innerHTML = `${pointerposition[0]} and ${pointerposition[1]}`;
             messageArea.appendChild(position);
 
-
-            let circle = document.createElement("div");
-            circle.id = "circle";
-            circle.style.height = "1rem";
-            circle.style.aspectRatio = "1";
-            circle.style.borderRadius = "50%";
-            circle.style.backgroundColor = "rgb(10, 10, 10)";
-            circle.style.position = "absolute";
-            messageArea.appendChild(circle);
-            circle.style.transform = "translate(-50%, -50%)"
-            // circle.style.top = `${pointerposition[1]}px`;
-            // circle.style.left = `${pointerposition[0]}px`;
-            
         }
     });
 
