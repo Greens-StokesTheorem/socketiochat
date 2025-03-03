@@ -68,40 +68,7 @@
         socket.emit("pointer move", pointerposition);
 
         //  Responds to server emitts
-        socket.on("pointer move", (pointerposition) => {
-
-            if (document.getElementById("pointerposition")) {
-                const box = document.getElementById("pointerposition");
-                box.innerHTML = `${pointerposition[0]} and ${pointerposition[1]}`;
-                document.getElementById("circle").style.top = `${pointerposition[1]}px`;
-                document.getElementById("circle").style.left = `${pointerposition[0]}px`;
-
-            } else {
-
-                let position = document.createElement("p");
-                position.id = "pointerposition"
-                position.style.backgroundColor = "grey";
-                position.style.width = "100%";
-                position.style.textAlign = "center";
-                position.style.color = "white";
-                position.innerHTML = `${pointerposition[0]} and ${pointerposition[1]}`;
-                messageArea.appendChild(position);
-
-
-                let circle = document.createElement("div");
-                circle.id = "circle";
-                circle.style.height = "1rem";
-                circle.style.aspectRatio = "1";
-                circle.style.borderRadius = "50%";
-                circle.style.backgroundColor = "rgb(10, 10, 10)";
-                circle.style.position = "absolute";
-                messageArea.appendChild(circle);
-                circle.style.transform = "translate(-50%, -50%)"
-                circle.style.top = `${pointerposition[1]}px`;
-                circle.style.left = `${pointerposition[0]}px`;
-                
-            }
-        })
+    
 
     })
 
@@ -133,6 +100,43 @@
         messageArea.appendChild(chatContent);
     });
 
+
+    socket.on("pointer move", (pointerposition) => {
+
+        event.preventDefault();
+
+        if (document.getElementById("pointerposition")) {
+            const box = document.getElementById("pointerposition");
+            box.innerHTML = `${pointerposition[0]} and ${pointerposition[1]}`;
+            document.getElementById("circle").style.top = `${pointerposition[1]}px`;
+            document.getElementById("circle").style.left = `${pointerposition[0]}px`;
+
+        } else {
+
+            let position = document.createElement("p");
+            position.id = "pointerposition"
+            position.style.backgroundColor = "grey";
+            position.style.width = "100%";
+            position.style.textAlign = "center";
+            position.style.color = "white";
+            position.innerHTML = `${pointerposition[0]} and ${pointerposition[1]}`;
+            messageArea.appendChild(position);
+
+
+            let circle = document.createElement("div");
+            circle.id = "circle";
+            circle.style.height = "1rem";
+            circle.style.aspectRatio = "1";
+            circle.style.borderRadius = "50%";
+            circle.style.backgroundColor = "rgb(10, 10, 10)";
+            circle.style.position = "absolute";
+            messageArea.appendChild(circle);
+            circle.style.transform = "translate(-50%, -50%)"
+            circle.style.top = `${pointerposition[1]}px`;
+            circle.style.left = `${pointerposition[0]}px`;
+            
+        }
+    });
 
 
 </script>
