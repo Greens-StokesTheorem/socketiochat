@@ -81,12 +81,12 @@
 
     document.addEventListener("pointermove", (e) => {
 
-        const newX = e.clientX / devicewidth;
-        const newY = e.clientY / deviceheight;
+        const x = e.clientX / devicewidth;
+        const y = e.clientY / deviceheight;
         document.getElementById("circle").style.top = `${newY * 100}%`;
         document.getElementById("circle").style.left = `${newX * 100}%`;
 
-        socket.emit("drag", {newX, newY});
+        socket.emit("drag", {x, y});
 
     })
 
